@@ -1,7 +1,7 @@
 -- Lua SwitchBox for Beier SFR-1 widget V0.1
 --
 --
--- A Radiomaster TX16S widget for the EdgeTX OS to simulate a SWTBOX
+-- A Radiomaster TX16S widget for the EdgeTX OS
 --
 -- Author: Dieter Bruse http://bruse-it.com/
 --
@@ -36,7 +36,7 @@ local options = {
 
 local inputs = {}
 local SwitchInfo = {}
-local BackgroundImage = Bitmap.open("/WIDGETS/SWITCHVW/PNG/RMTX16II.png")
+local BackgroundImage = Bitmap.open("/WIDGETS/switchvw/PNG/RMTX16II.png")
 
 local function loadConfig(options)
 
@@ -98,15 +98,10 @@ local function create(zone, options)
   local function refresh(widget, event, touchState)
     -- Runs periodically only when widget instance is visible
     -- If full screen, then event is 0 or event value, otherwise nil
-    -- lcd.clear()
-   --lcd.drawText(0,1,"Refresh Size " .. widget.zone.w .. "/" .. widget.zone.h)
-    --lcd.drawText(0,30,"Count of Inputs " .. #inputs)
-    --for idx=0, #inputs do
-    --  lcd.drawText(0,idx * 15, "Index:" .. idx .. " has ID:" .. inputs[idx].InputID .. " Name:" .. inputs[idx].InputLine.name .. " FieldName:" .. inputs[idx].fieldInfo.name .. "(" .. inputs[idx].fieldInfo.id .. ")" )
-    --end
+ 
     lcd.drawBitmap(BackgroundImage, 0, 0)
     local idx = 0
-    --lcd.drawText(0,0, "Count:" .. #SwitchInfo)
+
     for index,value in ipairs({{name="sa",col=0, row=110}, {name="sb",col=0, row=80}, {name="sc",col=300, row=80}, {name="sd",col=300, row=110}, {name="se",col=0, row=45}, {name="sf",col=0, row=5}, {name="sg",col=300, row=45},{name= "sh",col=300, row=5}})
     do
       local resultValue = ""
