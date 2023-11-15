@@ -1,4 +1,4 @@
-Softswitch für Beier SFR-1 oder SFR-1-HL Steuerpad.
+Switch View für Radiomaster TX16S/TX16S II.
 
 [Benötigt EdgeTX 2.7.x oder höher](https://github.com/EdgeTX/edgetx)
 
