@@ -35,8 +35,7 @@ local options = {
   }
 
 local inputs = {}
-local SwitchInfo = {}
-local BackgroundImage = Bitmap.open("/WIDGETS/switchvw/PNG/RMTX16II.png")
+local BackgroundImage = Bitmap.open("/WIDGETS/SWITCHVW/PNG/RMTX16II.png")
 
 local function loadConfig(options)
 
@@ -45,7 +44,7 @@ local function loadConfig(options)
     local index = 0
     local theInput = {}
     local fieldInfo = {}
-    
+    inputs = {}
     while lines > 0 do
         lines = model.getInputsCount(input)
         for line=0, lines do
@@ -54,12 +53,6 @@ local function loadConfig(options)
             then
                 fieldInfo = getFieldInfo(theInput.source)
                 inputs[index] = {InputID=input, InputLine=theInput, fieldInfo=fieldInfo}
---                SwitchInfo[theInput.inputName] = "My Test"
---                SwitchInfo[fieldInfo.name]= SwitchInfo[fieldInfo.name] .. theInput.inputName
---                if(SwitchInfo[fieldInfo.id] == nil)
---                then
---                    SwitchInfo[fieldInfo.id].Name = theInput.name
---                end
                 index = index + 1
             end
         end
@@ -86,6 +79,7 @@ local function create(zone, options)
 
   local function update(widget, options)
     -- Runs if options are changed from the Widget Settings menu
+    loadConfig(options)
     widget.options = options
   end
  
