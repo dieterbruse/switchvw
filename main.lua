@@ -36,6 +36,20 @@ local options = {
 
 local inputs = {}
 local BackgroundImage = Bitmap.open("/WIDGETS/SWITCHVW/PNG/RMTX16II.png")
+local log_filename = "/LOGS/SWITCHVWlog.txt"
+
+
+local function write_log(message, create)
+      local write_mode = "a"
+        if create ~= true then
+          write_mode = "a"
+        else
+          write_mode = "w"
+        end
+  			local file = io.open(log_filename, write_mode)
+  			io.write(file, message, "\r\n")
+  			io.close(file)
+end
 
 local function loadConfig(options)
 
@@ -48,10 +62,13 @@ local function loadConfig(options)
     while lines > 0 do
         lines = model.getInputsCount(input)
         for line=0, lines do
+--            write_log("Loading Line Nr. " .. line, true)
             theInput = model.getInput(input, line)
             if theInput ~= nil
             then
+--                write_log("Loading Input for Line " .. line .. " Input Name: " .. theInput.name .. " InputName: " .. theInput.inputName,false)
                 fieldInfo = getFieldInfo(theInput.source)
+--                write_log("Loading FieldInfo for Line " .. line .. " InputName: " .. fieldInfo.name,false)
                 inputs[index] = {InputID=input, InputLine=theInput, fieldInfo=fieldInfo}
                 index = index + 1
             end
@@ -95,22 +112,42 @@ local function create(zone, options)
  
     lcd.drawBitmap(BackgroundImage, 0, 0)
     local idx = 0
-
-    for index,value in ipairs({{name="sa",col=0, row=110}, {name="sb",col=0, row=80}, {name="sc",col=300, row=80}, {name="sd",col=300, row=110}, {name="se",col=0, row=45}, {name="sf",col=0, row=5}, {name="sg",col=300, row=45},{name= "sh",col=300, row=5}})
+    local rightStart = 285
+    for index,value in ipairs({{name="sa",col=0, row=110}, {name="sb",col=0, row=75}, {name="sc",col=rightStart, row=75}, {name="sd",col=rightStart, row=110}, {name="se",col=0, row=40}, {name="sf",col=0, row=5}, {name="sg",col=rightStart, row=40},{name= "sh",col=rightStart, row=5}})
     do
-      local resultValue = ""
+      local firstLine = ""
+      local secondLine = ""
       local delimiter = string.upper(value.name) .. ": "
+      local inputsPrinted = 0
+      lcd.drawRectangle(value.col, value.row, 105, 33, RED)      
       for input_index = 0, #inputs do
-        if inputs[input_index].fieldInfo.name == value.name
+--        write_log("View: Compare Input Nr. " .. input_index .. " Name: " .. string.upper(inputs[input_index].fieldInfo.name) .. " with valueName: " .. string.upper(value.name), false)
+        if string.upper(inputs[input_index].fieldInfo.name) == string.upper(value.name)
         then
-          resultValue = resultValue .. delimiter .. inputs[input_index].InputLine.name
-          delimiter = "/"
+          if inputsPrinted < 2
+          then
+            firstLine = firstLine .. delimiter .. inputs[input_index].InputLine.name
+  --          write_log("View: Input Nr. " .. input_index .. "ResultValue: " .. resultValue, false )
+            delimiter = "/"
+          else
+            if inputsPrinted == 2
+            then
+              delimiter = ""
+            end
+            secondLine = secondLine .. delimiter .. inputs[input_index].InputLine.name
+            delimiter = "/"
+          end
+          inputsPrinted = inputsPrinted + 1
         end
       end
-      if(resultValue ~= "")
+      if firstLine ~= ""
       then
-        lcd.drawText(value.col,value.row, resultValue, widget.options.Color)
+        lcd.drawText(value.col+1,value.row, firstLine, widget.options.Color)
         idx = idx + 1
+      end
+      if secondLine ~= ""
+      then
+        lcd.drawText(value.col + 29,value.row + 15, secondLine, widget.options.Color)
       end
     end
 
